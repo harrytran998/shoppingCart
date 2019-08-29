@@ -11,11 +11,18 @@ import {dataItems} from '../utils/Item';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const Items = dataItems;
+const TimeTemp = new Date(2019, 7, 30, 4);
+const Now = new Date();
+const Timer = Math.floor((TimeTemp - Now) / 1000);
+let SaleSecond = 0;
+let SaleMin = 0;
+let SaleHours = 0;
 export default class srcHomeShop extends Component {
   constructor(props) {
     super(props);
     this.state = {
       numberCartItems: 5,
+      timer: Timer,
     };
   }
 
@@ -23,6 +30,23 @@ export default class srcHomeShop extends Component {
     header: null,
     headerBackTitle: null,
   };
+
+  componentDidMount() {
+    this.interval = setInterval(
+      () => this.setState(prevState => ({timer: prevState.timer - 1})),
+      1000,
+    );
+  }
+
+  componentDidUpdate() {
+    if (this.state.timer === 1) {
+      clearInterval(this.interval);
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
 
   _renderHeader() {
     return (
@@ -56,9 +80,9 @@ export default class srcHomeShop extends Component {
           FLASH SALE
         </Text>
         <View style={styles.timeBoads}>
-          {this._renderTimeBoadItem('00')}
-          {this._renderTimeBoadItem('00')}
-          {this._renderTimeBoadItem('00')}
+          {this._renderTimeBoadItem(SaleHours)}
+          {this._renderTimeBoadItem(SaleMin)}
+          {this._renderTimeBoadItem(SaleSecond)}
         </View>
       </View>
     );
@@ -98,10 +122,23 @@ export default class srcHomeShop extends Component {
   _keyExtractor = (item, index) => item.id;
 
   _renderTimeBoadItem(time) {
-    return <Text style={styles.txtTime}>{time}</Text>;
+    return <Text style={styles.txtTime}>{time < 10 ? '0' + time : time}</Text>;
+  }
+
+  _countDownTime() {
+    let saleTime = this.state.timer;
+    if (saleTime > 0) {
+      SaleSecond = saleTime % 60;
+      SaleMin = Math.floor(saleTime / 60);
+      if (SaleMin >= 60) {
+        SaleHours = Math.floor(SaleMin / 60);
+        SaleMin = SaleMin % 60;
+      }
+    }
   }
 
   render() {
+    this._countDownTime();
     return (
       <SafeAreaView style={styles.container}>
         {this._renderHeader()}
@@ -173,7 +210,6 @@ const styles = StyleSheet.create({
   },
   titleSale: {
     flex: 7,
-    top: 10,
   },
   itemImg: {
     width: 105,
