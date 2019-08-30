@@ -11,7 +11,7 @@ import {dataItems} from '../utils/Item';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const Items = dataItems;
-const TimeTemp = new Date(2019, 7, 30, 4);
+const TimeTemp = new Date(2019, 7, 30, 18);
 const Now = new Date();
 const Timer = Math.floor((TimeTemp - Now) / 1000);
 let SaleSecond = 0;
@@ -32,10 +32,9 @@ export default class srcHomeShop extends Component {
   };
 
   componentDidMount() {
-    this.interval = setInterval(
-      () => this.setState(prevState => ({timer: prevState.timer - 1})),
-      1000,
-    );
+    this.interval = setInterval(() => {
+      this.setState(prevState => ({timer: prevState.timer - 1}));
+    }, 1000);
   }
 
   componentDidUpdate() {
@@ -74,6 +73,7 @@ export default class srcHomeShop extends Component {
   }
 
   _renderSaleTime() {
+    this._countDownTime();
     return (
       <View style={[styles.timeSale, styles.padLR]}>
         <Text h4 h4Style={[styles.txtColorWhite, styles.titleSale]}>
@@ -98,6 +98,7 @@ export default class srcHomeShop extends Component {
           horizontal={true}
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
+          showsHorizontalScrollIndicator={false}
         />
       </View>
     );
@@ -138,7 +139,6 @@ export default class srcHomeShop extends Component {
   }
 
   render() {
-    this._countDownTime();
     return (
       <SafeAreaView style={styles.container}>
         {this._renderHeader()}
@@ -229,6 +229,8 @@ const styles = StyleSheet.create({
     padding: 5,
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
+    borderBottomLeftRadius: 6,
+    borderBottomRightRadius: 6,
   },
   itemTxtName: {
     fontSize: 12,
