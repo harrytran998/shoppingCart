@@ -13,7 +13,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 export default class CartItems extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      itemNumber: this.props.item.number,
+    };
   }
 
   _renderChangeNumber() {
@@ -26,10 +28,8 @@ export default class CartItems extends Component {
           </TouchableOpacity>
           <TextInput
             style={styles.inputNumber}
-            value={'0'}
-            onChangeText={text => {
-              //todo
-            }}
+            value={this.state.itemNumber.toString()}
+            editable={false}
             keyboardType="phone-pad"
             multiline={false}
           />
@@ -42,22 +42,26 @@ export default class CartItems extends Component {
   }
 
   render() {
+    console.log('props', this.props);
+    const {item, index} = this.props;
     const SwipeoutSetting = {
       backgroundColor: '#fff',
       autoClose: true,
       right: [
         {
-          onPress: () => {},
+          onPress: () => {
+            this.props.onPress();
+          },
           text: 'Xoá',
           type: 'delete',
         },
       ],
       disabled: false,
       onOpen: (secId, rowId, direction) => {
-        this.setState({isEditMode: true});
+        //todo onOpen
       },
       onClose: (secId, rowId, direction) => {
-        this.setState({isEditMode: false});
+        //todo on close
       },
     };
     return (
@@ -66,18 +70,18 @@ export default class CartItems extends Component {
           <CheckBox
             containerStyle={styles.ckbSelectItem}
             title={null}
-            checked={true}
+            checked={item.isPaySelect}
             textStyle={styles.txtTitleStyle}
             size={30}
             checkedIcon="check-square"
             checkedColor="#b4060c"
           />
-          <Image source={{uri: this.props.imgUri}} style={styles.itemImg} />
+          <Image source={{uri: item.img}} style={styles.itemImg} />
           <View style={styles.itemDetail}>
-            <Text style={styles.txtTitleStyle}>weqsdazxc </Text>
-            <Text style={styles.txtPrice}>200.000d</Text>
-            <Text style={styles.txtDetailItem}>weqsdazxc</Text>
-            <Text style={styles.txtDetailItem}>weqsdazxc</Text>
+            <Text style={styles.txtTitleStyle}>{item.name} </Text>
+            <Text style={styles.txtPrice}>{item.number * item.price}đ</Text>
+            <Text style={styles.txtDetailItem}>Lorem Ipsum</Text>
+            <Text style={styles.txtDetailItem}>Lorem Ipsum</Text>
           </View>
           {this._renderChangeNumber()}
         </View>

@@ -12,15 +12,19 @@ const CartIcon = props => {
         containerStyle={styles.cartItemsBadge}
         badgeStyle={styles.badgeCartStyle}
         textStyle={styles.cartItemsNum}
-        value={props.cartItems.length}
+        value={props.cartItems}
       />
     </View>
   );
 };
 
 const mapStateToProps = state => {
+  let numbetItem = 0;
+  state.forEach(item => {
+    numbetItem += item.number;
+  });
   return {
-    cartItems: state,
+    cartItems: numbetItem,
   };
 };
 

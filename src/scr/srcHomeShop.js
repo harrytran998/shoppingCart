@@ -15,7 +15,8 @@ import {connect} from 'react-redux';
 import CartIcon from '../components/CartIcon';
 
 const Items = dataItems;
-const TimeTemp = new Date(2019, 7, 31, 16);
+//set time countdown (yyyy, mm, dd, hh, MM, ss)
+const TimeTemp = new Date(2019, 7, 31, 18);
 const Now = new Date();
 const Timer = Math.floor((TimeTemp - Now) / 1000);
 let SaleSecond = 0;
@@ -148,7 +149,7 @@ class srcHomeShop extends Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addItemToCart: product => dispatch({type: 'ADD_TO_CART', paylod: product}),
+    addItemToCart: product => dispatch({type: 'ADD_TO_CART', payload: product}),
   };
 };
 

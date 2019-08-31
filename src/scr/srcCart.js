@@ -1,33 +1,18 @@
 import React, {Component} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, FlatList} from 'react-native';
 import {CheckBox} from 'react-native-elements';
-import {cartItems} from '../utils/cartItemDemo';
+// import {cartItems} from '../utils/cartItemDemo';
 import CartItems from '../components/CartItem';
+import {connect} from 'react-redux';
 
-export default class srcCart extends Component {
+class srcCart extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isCheckAll: false,
-      Items: cartItems,
       isEditMode: false,
       numberOfItem: '10',
     };
-  }
-
-  _ChangeEditMode = () => {
-    this.setState({isEditMode: !this.state.isEditMode});
-    this.props.navigation.setParams({
-      isEdit: this.state.isEditMode,
-    });
-  };
-
-  componentDidMount() {
-    console.log('componentDidMount');
-    this.props.navigation.setParams({
-      changeEditMode: this._ChangeEditMode,
-      isEdit: false,
-    });
   }
 
   static headerStyle = StyleSheet.create({
@@ -36,11 +21,12 @@ export default class srcCart extends Component {
       fontWeight: '500',
       fontSize: 16,
     },
+    hearderEditBtn: {
+      paddingRight: 20,
+    },
   });
 
   static navigationOptions = ({navigation}) => {
-    const {params = {}} = navigation.state;
-    console.log('isEditMode - Nav', params);
     return {
       headerTitle: 'Giỏ hàng',
       headerTitleStyle: this.headerStyle.headerText,
@@ -50,7 +36,7 @@ export default class srcCart extends Component {
       },
       headerRight: (
         <TouchableOpacity
-          style={{paddingRight: 20}}
+          style={this.headerStyle.hearderEditBtn}
           onPress={() => {
             //todo
           }}>
@@ -97,18 +83,16 @@ export default class srcCart extends Component {
     return (
       <FlatList
         style={styles.Container}
-        data={this.state.Items}
+        data={this.props.cartItems}
         keyExtractor={this._keyExtractor}
         renderItem={({index, item}) => {
           return (
             <CartItems
+              item={item}
               index={index}
-              imgUri={item.img}
-              name={item.name}
-              price={item.price}
-              number={item.number}
-              paySelect={item.paySelect}
-              isEditMode={this.state.isEditMode}
+              onPress={() => {
+                this.props.removeItem(item);
+              }}
             />
           );
         }}
@@ -119,7 +103,6 @@ export default class srcCart extends Component {
   _keyExtractor = (item, index) => item.id;
 
   render() {
-    console.log('changeEditMode:', this.state.isEditMode);
     return (
       <View style={styles.Container}>
         {this._renderTotalPrice()}
@@ -128,6 +111,24 @@ export default class srcCart extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    cartItems: state,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    removeItem: product =>
+      dispatch({type: 'REMOVE_FROM_CART', payload: product}),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(srcCart);
 
 const styles = StyleSheet.create({
   Container: {
