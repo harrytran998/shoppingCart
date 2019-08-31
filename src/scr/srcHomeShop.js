@@ -5,8 +5,9 @@ import {
   StyleSheet,
   FlatList,
   SafeAreaView,
+  Alert,
 } from 'react-native';
-import {Text, Image, Input, Badge} from 'react-native-elements';
+import {Text, Image, Input} from 'react-native-elements';
 import {dataItems} from '../utils/Item';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
@@ -54,7 +55,7 @@ class srcHomeShop extends Component {
       <View style={[styles.header, styles.padLR]}>
         <View style={styles.searchField}>
           <Input
-            inputContainerStyle={{borderBottomWidth: 0}}
+            inputContainerStyle={styles.inputContainerStyle}
             placeholder="Search"
             rightIcon={<Icon name="search" size={24} color="#828899" />}
           />
@@ -89,7 +90,7 @@ class srcHomeShop extends Component {
       <View style={styles.content}>
         {this._renderSaleTime()}
         <FlatList
-          style={{paddingLeft: 15, paddingBottom: 15}}
+          style={styles.productsContainer}
           data={Items}
           horizontal={true}
           keyExtractor={this._keyExtractor}
@@ -105,7 +106,7 @@ class srcHomeShop extends Component {
       style={styles.itemContainer}
       onPress={() => {
         this.props.addItemToCart(item);
-        alert('add product ' + item.name + ' to cart');
+        Alert.alert('add product ' + item.name + ' to cart');
       }}>
       <Image source={{uri: item.img}} style={styles.itemImg} />
       <View style={styles.itemDetal}>
@@ -247,5 +248,12 @@ const styles = StyleSheet.create({
   itemTxtPrice: {
     fontSize: 12,
     color: '#8dba5b',
+  },
+  inputContainerStyle: {
+    borderBottomWidth: 0,
+  },
+  productsContainer: {
+    paddingLeft: 15,
+    paddingBottom: 15,
   },
 });
