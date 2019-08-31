@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
-import srcHomeShop from './src/scr/srcHomeShop';
-import srcCart from './src/scr/srcCart';
-import {createStackNavigator, createAppContainer} from 'react-navigation';
+import ShoppingCart from './ShoppingCart';
+import {Provider} from 'react-redux';
+import store from './store';
 
-const AppNavigator = createStackNavigator({
-  Home: srcHomeShop,
-  Cart: srcCart,
-});
-
-AppNavigator.path = '';
-
-export default createAppContainer(AppNavigator);
+export default class App extends Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <ShoppingCart />
+      </Provider>
+    );
+  }
+}

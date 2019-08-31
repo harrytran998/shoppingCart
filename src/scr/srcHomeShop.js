@@ -9,19 +9,21 @@ import {
 import {Text, Image, Input, Badge} from 'react-native-elements';
 import {dataItems} from '../utils/Item';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {connect} from 'react-redux';
+
+import CartIcon from '../components/CartIcon';
 
 const Items = dataItems;
-const TimeTemp = new Date(2019, 7, 30, 18);
+const TimeTemp = new Date(2019, 7, 31, 16);
 const Now = new Date();
 const Timer = Math.floor((TimeTemp - Now) / 1000);
 let SaleSecond = 0;
 let SaleMin = 0;
 let SaleHours = 0;
-export default class srcHomeShop extends Component {
+class srcHomeShop extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      numberCartItems: 5,
       timer: Timer,
     };
   }
@@ -60,13 +62,7 @@ export default class srcHomeShop extends Component {
         <TouchableOpacity
           style={styles.cartBtn}
           onPress={() => this.props.navigation.push('Cart')}>
-          <Icon name="shopping-cart" size={30} color="#fff" />
-          <Badge
-            containerStyle={styles.cartItemsBadge}
-            badgeStyle={styles.badgeCartStyle}
-            textStyle={styles.cartItemsNum}
-            value={this.state.numberCartItems}
-          />
+          <CartIcon />
         </TouchableOpacity>
       </View>
     );
@@ -108,7 +104,8 @@ export default class srcHomeShop extends Component {
     <TouchableOpacity
       style={styles.itemContainer}
       onPress={() => {
-        alert(item.id);
+        this.props.addItemToCart(item);
+        alert('add product ' + item.name + ' to cart');
       }}>
       <Image source={{uri: item.img}} style={styles.itemImg} />
       <View style={styles.itemDetal}>
@@ -147,6 +144,17 @@ export default class srcHomeShop extends Component {
     );
   }
 }
+
+const mapDispatchToProps = dispatch => {
+  return {
+    addItemToCart: product => dispatch({type: 'ADD_TO_CART', paylod: product}),
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(srcHomeShop);
 
 const styles = StyleSheet.create({
   container: {
@@ -239,19 +247,5 @@ const styles = StyleSheet.create({
   itemTxtPrice: {
     fontSize: 12,
     color: '#8dba5b',
-  },
-  cartItemsBadge: {
-    position: 'absolute',
-    top: 8,
-    right: -4,
-  },
-  cartItemsNum: {
-    fontSize: 12,
-    color: '#b4060c',
-  },
-  badgeCartStyle: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#828899',
   },
 });

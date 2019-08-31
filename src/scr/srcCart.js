@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, FlatList} from 'react-native';
-import {CheckBox, Image} from 'react-native-elements';
+import {CheckBox} from 'react-native-elements';
 import {cartItems} from '../utils/cartItemDemo';
-import CartItems from '../com/listCartItems';
+import CartItems from '../components/CartItem';
 
 export default class srcCart extends Component {
   constructor(props) {
@@ -10,9 +10,24 @@ export default class srcCart extends Component {
     this.state = {
       isCheckAll: false,
       Items: cartItems,
-      isEditMode: true,
+      isEditMode: false,
       numberOfItem: '10',
     };
+  }
+
+  _ChangeEditMode = () => {
+    this.setState({isEditMode: !this.state.isEditMode});
+    this.props.navigation.setParams({
+      isEdit: this.state.isEditMode,
+    });
+  };
+
+  componentDidMount() {
+    console.log('componentDidMount');
+    this.props.navigation.setParams({
+      changeEditMode: this._ChangeEditMode,
+      isEdit: false,
+    });
   }
 
   static headerStyle = StyleSheet.create({
@@ -23,23 +38,27 @@ export default class srcCart extends Component {
     },
   });
 
-  static navigationOptions = {
-    headerTitle: 'Giỏ hàng',
-    headerTitleStyle: this.headerStyle.headerText,
-    headerStyle: {
-      backgroundColor: '#b4060c',
-      height: 58,
-    },
-    headerRight: (
-      <TouchableOpacity
-        style={{paddingRight: 20}}
-        onPress={() => {
-          alert('edit');
-        }}>
-        <Text style={this.headerStyle.headerText}>Sửa</Text>
-      </TouchableOpacity>
-    ),
-    headerTintColor: '#fff',
+  static navigationOptions = ({navigation}) => {
+    const {params = {}} = navigation.state;
+    console.log('isEditMode - Nav', params);
+    return {
+      headerTitle: 'Giỏ hàng',
+      headerTitleStyle: this.headerStyle.headerText,
+      headerStyle: {
+        backgroundColor: '#b4060c',
+        height: 58,
+      },
+      headerRight: (
+        <TouchableOpacity
+          style={{paddingRight: 20}}
+          onPress={() => {
+            //todo
+          }}>
+          <Text style={this.headerStyle.headerText}>Sửa</Text>
+        </TouchableOpacity>
+      ),
+      headerTintColor: '#fff',
+    };
   };
 
   _renderTotalPrice() {
@@ -83,11 +102,13 @@ export default class srcCart extends Component {
         renderItem={({index, item}) => {
           return (
             <CartItems
+              index={index}
               imgUri={item.img}
               name={item.name}
               price={item.price}
               number={item.number}
               paySelect={item.paySelect}
+              isEditMode={this.state.isEditMode}
             />
           );
         }}
@@ -98,8 +119,7 @@ export default class srcCart extends Component {
   _keyExtractor = (item, index) => item.id;
 
   render() {
-    console.log('numberOfItem:', this.state.numberOfItem);
-    console.log('isEditMode:', this.state.isEditMode);
+    console.log('changeEditMode:', this.state.isEditMode);
     return (
       <View style={styles.Container}>
         {this._renderTotalPrice()}

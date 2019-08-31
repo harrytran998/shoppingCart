@@ -3,7 +3,7 @@ export const dataItems = [
     id: '1',
     name: 'Item 1',
     price: 100,
-    img: 'https://picsum.photos/id/0/200/200',
+    img: 'https://picsum.photos/id/175/200/200',
   },
   {
     id: '2',
@@ -21,7 +21,7 @@ export const dataItems = [
     id: '4',
     name: 'Item 4',
     price: 400,
-    img: 'https://picsum.photos/id/0/200/200',
+    img: 'https://picsum.photos/id/194/200/200',
   },
   {
     id: '5',
