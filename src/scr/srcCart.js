@@ -10,8 +10,7 @@ class srcCart extends Component {
     super(props);
     this.state = {
       isCheckAll: false,
-      isEditMode: false,
-      numberOfItem: '10',
+      totalPrice: 0,
     };
   }
 
@@ -56,6 +55,7 @@ class srcCart extends Component {
           checked={this.state.isCheckAll}
           textStyle={styles.txtTitleStyle}
           onPress={() => {
+            this._payAllEvent();
             this._pressPayAll();
           }}
           size={30}
@@ -64,7 +64,7 @@ class srcCart extends Component {
         />
         <View style={styles.txtTotalMoney}>
           <Text style={styles.txtTitleStyle}>Tổng tiền:</Text>
-          <Text style={styles.txtPrice}>1.000.000d</Text>
+          <Text style={styles.txtPrice}>{this.state.totalPrice}đ</Text>
         </View>
         <TouchableOpacity style={styles.btnPay}>
           <Text style={styles.txtPayAll}>THANH TOÁN</Text>
@@ -90,8 +90,25 @@ class srcCart extends Component {
             <CartItems
               item={item}
               index={index}
-              onPress={() => {
+              onRemoveAll={() => {
                 this.props.removeItem(item);
+                this._checkItemState();
+              }}
+              onRemoveOne={() => {
+                this.props.removeOneItem(item);
+                this._checkItemState();
+              }}
+              onAddOne={() => {
+                this.props.addOneItem(item);
+                this._checkItemState();
+              }}
+              onSelectToPay={() => {
+                this.props.selectToPay(item);
+                this._checkItemState();
+              }}
+              onCancelToPay={() => {
+                this.props.cancelToPay(item);
+                this._checkItemState();
               }}
             />
           );
@@ -100,13 +117,62 @@ class srcCart extends Component {
     );
   }
 
+  _returnEmptyCart() {
+    return <Text>Không có Item nào -_-</Text>;
+  }
+
   _keyExtractor = (item, index) => item.id;
+
+  componentDidMount() {
+    this._checkItemState();
+  }
+
+  _checkItemState() {
+    const items = this.props.cartItems;
+    let totalPrice = 0;
+    let isSelectAll = true;
+    for (var i in items) {
+      console.log('items[i].isPaySelect', items[i].isPaySelect);
+      if (items[i].isPaySelect === false) {
+        isSelectAll = false;
+      } else {
+        totalPrice += items[i].number * items[i].price;
+      }
+    }
+    this.setState({
+      isCheckAll: isSelectAll,
+      totalPrice: totalPrice,
+    });
+  }
+
+  _payAllEvent() {
+    let items = this.props.cartItems;
+    console.log('this.state.isSelectAll', this.state.isSelectAll);
+    if (this.state.isCheckAll == true) {
+      for (var i in items) {
+        if (items.hasOwnProperty(i)) {
+          const item = items[i];
+          this.props.cancelToPay(item);
+        }
+      }
+    } else {
+      for (var i in items) {
+        if (items.hasOwnProperty(i)) {
+          const item = items[i];
+          this.props.selectToPay(item);
+        }
+      }
+    }
+    this._checkItemState();
+  }
 
   render() {
     return (
       <View style={styles.Container}>
         {this._renderTotalPrice()}
-        {this._renderCartItems()}
+        {this.props.cartItems.length === 0
+          ? this._returnEmptyCart()
+          : this._renderCartItems()}
       </View>
     );
   }
@@ -122,6 +188,11 @@ const mapDispatchToProps = dispatch => {
   return {
     removeItem: product =>
       dispatch({type: 'REMOVE_FROM_CART', payload: product}),
+    removeOneItem: product =>
+      dispatch({type: 'REMOVE_ONE_ITEM', payload: product}),
+    addOneItem: product => dispatch({type: 'ADD_TO_CART', payload: product}),
+    selectToPay: product => dispatch({type: 'SELECT_TO_PAY', payload: product}),
+    cancelToPay: product => dispatch({type: 'CANCEL_TO_PAY', payload: product}),
   };
 };
 
@@ -143,6 +214,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderTopWidth: 1,
     borderColor: '#cfd0d3',
+    backgroundColor: '#fff',
   },
   ckbSelectAll: {
     flex: 38,

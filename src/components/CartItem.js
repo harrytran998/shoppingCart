@@ -13,9 +13,6 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 export default class CartItems extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      itemNumber: this.props.item.number,
-    };
   }
 
   _renderChangeNumber() {
@@ -23,17 +20,17 @@ export default class CartItems extends Component {
       <View style={styles.changeNumContainer}>
         <Text style={styles.txtDetailItem}>Số lượng:</Text>
         <View style={styles.editNumber}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => this.props.onRemoveOne()}>
             <Icon name="remove" size={25} color="#828899" />
           </TouchableOpacity>
           <TextInput
             style={styles.inputNumber}
-            value={this.state.itemNumber.toString()}
+            value={this.props.item.number.toString()}
             editable={false}
             keyboardType="phone-pad"
             multiline={false}
           />
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => this.props.onAddOne()}>
             <Icon name="add" size={25} color="#828899" />
           </TouchableOpacity>
         </View>
@@ -41,8 +38,15 @@ export default class CartItems extends Component {
     );
   }
 
+  _checkPayEvent() {
+    if (this.props.item.isPaySelect) {
+      this.props.onCancelToPay();
+    } else {
+      this.props.onSelectToPay();
+    }
+  }
+
   render() {
-    console.log('props', this.props);
     const {item, index} = this.props;
     const SwipeoutSetting = {
       backgroundColor: '#fff',
@@ -50,7 +54,7 @@ export default class CartItems extends Component {
       right: [
         {
           onPress: () => {
-            this.props.onPress();
+            this.props.onRemoveAll();
           },
           text: 'Xoá',
           type: 'delete',
@@ -72,13 +76,17 @@ export default class CartItems extends Component {
             title={null}
             checked={item.isPaySelect}
             textStyle={styles.txtTitleStyle}
+            onPress={() => this._checkPayEvent()}
             size={30}
             checkedIcon="check-square"
             checkedColor="#b4060c"
           />
           <Image source={{uri: item.img}} style={styles.itemImg} />
           <View style={styles.itemDetail}>
-            <Text style={styles.txtTitleStyle}>{item.name} </Text>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.txtTitleStyle}>{item.name} </Text>
+              <Text style={styles.txtPrice}> x{item.number}</Text>
+            </View>
             <Text style={styles.txtPrice}>{item.number * item.price}đ</Text>
             <Text style={styles.txtDetailItem}>Lorem Ipsum</Text>
             <Text style={styles.txtDetailItem}>Lorem Ipsum</Text>

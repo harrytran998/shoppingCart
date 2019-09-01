@@ -16,7 +16,7 @@ import CartIcon from '../components/CartIcon';
 
 const Items = dataItems;
 //set time countdown (yyyy, mm, dd, hh, MM, ss)
-const TimeTemp = new Date(2019, 7, 31, 18);
+const TimeTemp = new Date(2019, 8, 1, 13);
 const Now = new Date();
 const Timer = Math.floor((TimeTemp - Now) / 1000);
 let SaleSecond = 0;
