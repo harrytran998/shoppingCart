@@ -6,6 +6,7 @@ const cartItems = (state = [], action) => {
       if (typeof item.number === 'undefined' || item.number === 0) {
         item.number = 1;
         item.isPaySelect = false;
+        item.isEditMode = false;
         items.push(item);
       } else if (item.number > 0) {
         item.number += 1;
@@ -46,6 +47,17 @@ const cartItems = (state = [], action) => {
           break; //Stop this loop, we found it!
         }
       }
+      return items;
+    case 'EDIT_MODE':
+      for (var i in items) {
+        items[i].isEditMode = true;
+      }
+      return items;
+    case 'CANCEL_EDIT_MODE':
+      for (var i in items) {
+        items[i].isEditMode = false;
+      }
+      return items;
   }
   return items;
 };

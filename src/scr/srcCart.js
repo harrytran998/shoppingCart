@@ -4,6 +4,7 @@ import {CheckBox} from 'react-native-elements';
 // import {cartItems} from '../utils/cartItemDemo';
 import CartItems from '../components/CartItem';
 import {connect} from 'react-redux';
+import BtnEdit from '../components/BtnEdit';
 
 class srcCart extends Component {
   constructor(props) {
@@ -20,9 +21,6 @@ class srcCart extends Component {
       fontWeight: '500',
       fontSize: 16,
     },
-    hearderEditBtn: {
-      paddingRight: 20,
-    },
   });
 
   static navigationOptions = ({navigation}) => {
@@ -33,15 +31,7 @@ class srcCart extends Component {
         backgroundColor: '#b4060c',
         height: 58,
       },
-      headerRight: (
-        <TouchableOpacity
-          style={this.headerStyle.hearderEditBtn}
-          onPress={() => {
-            //todo
-          }}>
-          <Text style={this.headerStyle.headerText}>Sửa</Text>
-        </TouchableOpacity>
-      ),
+      headerRight: <BtnEdit />,
       headerTintColor: '#fff',
     };
   };
@@ -66,11 +56,24 @@ class srcCart extends Component {
           <Text style={styles.txtTitleStyle}>Tổng tiền:</Text>
           <Text style={styles.txtPrice}>{this.state.totalPrice}đ</Text>
         </View>
-        <TouchableOpacity style={styles.btnPay}>
+        <TouchableOpacity
+          style={styles.btnPay}
+          onPress={() => this._payEvent()}>
           <Text style={styles.txtPayAll}>THANH TOÁN</Text>
         </TouchableOpacity>
       </View>
     );
+  }
+
+  _payEvent() {
+    const items = this.props.cartItems;
+    for (var i in items) {
+      console.log('items[i].isPaySelect', items[i].isPaySelect);
+      if (items[i].isPaySelect === true) {
+        this.props.removeItem(items[i]);
+      }
+    }
+    this._checkItemState();
   }
 
   _pressPayAll() {
@@ -132,7 +135,6 @@ class srcCart extends Component {
     let totalPrice = 0;
     let isSelectAll = true;
     for (var i in items) {
-      console.log('items[i].isPaySelect', items[i].isPaySelect);
       if (items[i].isPaySelect === false) {
         isSelectAll = false;
       } else {

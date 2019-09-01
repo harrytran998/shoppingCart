@@ -60,7 +60,7 @@ export default class CartItems extends Component {
           type: 'delete',
         },
       ],
-      disabled: false,
+      disabled: !item.isEditMode,
       onOpen: (secId, rowId, direction) => {
         //todo onOpen
       },
@@ -91,7 +91,7 @@ export default class CartItems extends Component {
             <Text style={styles.txtDetailItem}>Lorem Ipsum</Text>
             <Text style={styles.txtDetailItem}>Lorem Ipsum</Text>
           </View>
-          {this._renderChangeNumber()}
+          {item.isEditMode ? this._renderChangeNumber() : null}
         </View>
       </Swipeout>
     );
