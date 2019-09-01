@@ -16,7 +16,7 @@ import CartIcon from '../components/CartIcon';
 
 const Items = dataItems;
 //set time countdown (yyyy, mm, dd, hh, MM, ss)
-const TimeTemp = new Date(2019, 8, 1, 13);
+const TimeTemp = new Date(2019, 8, 9);
 const Now = new Date();
 const Timer = Math.floor((TimeTemp - Now) / 1000);
 let SaleSecond = 0;
@@ -165,6 +165,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#b4060c',
   },
   header: {
+    flex: 25,
     backgroundColor: '#b4060c',
     flexDirection: 'row',
   },
@@ -186,7 +187,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   content: {
-    flex: 1,
+    flex: 75,
     backgroundColor: '#b4060c',
     flexDirection: 'column',
   },
@@ -203,13 +204,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   timeSale: {
-    flex: 25,
+    flex: 3,
     flexDirection: 'row',
     marginTop: 6,
     marginBottom: 6,
   },
   listItems: {
-    flex: 75,
+    flex: 7,
     marginBottom: 20,
   },
   timeBoads: {
@@ -254,6 +255,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
   },
   productsContainer: {
+    height: '70%',
     paddingLeft: 15,
     paddingBottom: 15,
   },

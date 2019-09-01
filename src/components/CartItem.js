@@ -142,8 +142,8 @@ const styles = StyleSheet.create({
   },
   inputNumber: {
     width: 30,
-    marginLeft: 6,
-    marginRight: 6,
+    margin: 0,
+    padding: 0,
     borderRadius: 4,
     borderColor: '#cfd0d3',
     borderWidth: 1,
