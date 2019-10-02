@@ -53,7 +53,7 @@ class srcCart extends Component {
           checkedColor="#b4060c"
         />
         <View style={styles.txtTotalMoney}>
-          <Text style={styles.txtTitleStyle}>Tổng tiền:</Text>
+          <Text style={styles.txtTitleStyle}>total money:</Text>
           <Text style={styles.txtPrice}>{this.state.totalPrice}đ</Text>
         </View>
         <TouchableOpacity
