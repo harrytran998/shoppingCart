@@ -1,31 +1,31 @@
-const cartItems = (state = [], action) => {
+const cartItems = (state = [], { type, payload }) => {
   let items = [...state];
-  let item = action.payload;
-  switch (action.type) {
+  let { id, number, isPaySelect, isEditMode } = payload;
+  switch (type) {
     case 'ADD_TO_CART':
-      if (typeof item.number === 'undefined' || item.number === 0) {
-        item.number = 1;
-        item.isPaySelect = false;
-        item.isEditMode = false;
-        items.push(item);
-      } else if (item.number > 0) {
-        item.number += 1;
+      if (typeof number === 'undefined' || number === 0) {
+        number = 1;
+        isPaySelect = false;
+        isEditMode = false;
+        items.push({ id, number, isPaySelect, isEditMode });
+      } else if (number > 0) {
+        number += 1;
       }
       return items;
     case 'REMOVE_FROM_CART':
-      item.number = 0;
-      item.isPaySelect = true;
-      return state.filter(cartItem => cartItem.id !== item.id);
+      number = 0;
+      isPaySelect = true;
+      return state.filter(cartItem => cartItem.id !== id);
     case 'REMOVE_ONE_ITEM':
-      if (item.number === 0) {
+      if (number === 0) {
         return;
-      } else if (item.number === 1) {
-        item.number = 0;
-        item.isPaySelect = false;
-        return state.filter(cartItem => cartItem.id !== item.id);
+      } else if (number === 1) {
+        number = 0;
+        isPaySelect = false;
+        return state.filter(cartItem => cartItem.id !== id);
       } else {
-        for (var i in items) {
-          if (items[i].id === item.id) {
+        for (let i in items) {
+          if (items[i].id === id) {
             items[i].number -= 1;
             break; //Stop this loop, we found it!
           }
@@ -33,28 +33,28 @@ const cartItems = (state = [], action) => {
       }
       return items;
     case 'SELECT_TO_PAY':
-      for (var i in items) {
-        if (items[i].id === item.id) {
+      for (let i in items) {
+        if (items[i].id === id) {
           items[i].isPaySelect = true;
           break; //Stop this loop, we found it!
         }
       }
       return items;
     case 'CANCEL_TO_PAY':
-      for (var i in items) {
-        if (items[i].id === item.id) {
+      for (let i in items) {
+        if (items[i].id === id) {
           items[i].isPaySelect = false;
           break; //Stop this loop, we found it!
         }
       }
       return items;
     case 'EDIT_MODE':
-      for (var i in items) {
+      for (let i in items) {
         items[i].isEditMode = true;
       }
       return items;
     case 'CANCEL_EDIT_MODE':
-      for (var i in items) {
+      for (let i in items) {
         items[i].isEditMode = false;
       }
       return items;
